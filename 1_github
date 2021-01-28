@@ -1,0 +1,45 @@
+- name: makeiso script checkout
+  hosts: centos3
+  #connection: local
+  vars_prompt:
+    - name: "githubuser"
+      prompt: "Enter your github username"
+      private: no
+    - name: "githubpassword"
+      prompt: "Enter your github password"
+      private: yes
+
+  tasks:
+  - name: check out a git repository
+    git:
+      repo: https://{{ githubuser | urlencode }}:{{ githubpassword | urlencode }}@github.com/popamircealaurentiu/test1.git
+      dest: /tmp/test1
+
+#  - name: create dir for script
+#    file:
+#      path: ./makeiso
+#      state: directory
+
+#  - name: copy script
+#    copy:
+#      src: /tmp/test1/makeiso.sh
+#      dest: /root/iso/
+#      mode: a+x
+#    delegate_to: centos3
+
+  - name: copy files from git folder to remote
+     #become: true
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: a+x
+      remote_src: true
+    loop:
+      - { src: '/tmp/test1/makeiso.sh' , dest: '/root/iso/' }
+     # - { src: '/tmp/test1/file' , dest: '/root/iso/' }
+
+  - name: remove git folder
+    file:
+      path: /tmp/test1
+      state: absent
+    delegate_to: centos3
