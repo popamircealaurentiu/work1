@@ -1,0 +1,38 @@
+- name: asdf
+  hosts: upgrade
+  vars:
+    ip: "{{ ansible_default_ipv4.address }}/{{ansible_default_ipv4.netmask }}"
+
+  tasks:
+     # facts debug
+     #
+#    - name: Print all available facts
+#      ansible.builtin.debug:
+#        var: ansible_facts
+
+
+    # prepare input for makeiso script
+    #
+    - name: test
+      set_fact:
+        mask_cidr: "{{ ip | ipaddr('prefix') }}"
+
+    - name: Ansible Template Example
+      template:
+        src: ks-template
+        dest: /tmp/{{ inventory_hostname }}
+
+    - name: Storing in a path relative to the playbook
+      ansible.builtin.fetch:
+        src: /tmp/{{ inventory_hostname }}
+        dest: ./{{ inventory_hostname }}
+        flat: yes
+
+    - name: copy script
+      ansible.builtin.copy:
+        src: ./{{ inventory_hostname }}
+        dest: /root/iso/{{ inventory_hostname }}
+      delegate_to: centos3
+    - name: run script
+      shell: "cd /root/iso/ && ./makeiso.sh"
+      delegate_to: centos3
