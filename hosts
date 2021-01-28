@@ -1,0 +1,10 @@
+# upgrade node
+[upgrade]
+centos2 ansible_user=root
+# http server node
+[http]
+centos3 ansible_user=root
+
+# to be assigned
+[node]
+centos4 ansible_user=root
