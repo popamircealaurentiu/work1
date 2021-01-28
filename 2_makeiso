@@ -1,4 +1,4 @@
-- name: asdf
+- name: makeiso on remote
   hosts: upgrade
   vars:
     ip: "{{ ansible_default_ipv4.address }}/{{ansible_default_ipv4.netmask }}"
