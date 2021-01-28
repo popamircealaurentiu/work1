@@ -1,0 +1,6 @@
+HOSTNAME={{ ansible_facts.hostname }}
+FQDN={{ ansible_facts.fqdn }}
+IP={{ ansible_default_ipv4.address }}/{{ mask_cidr }}
+GATEWAY={{ ansible_default_ipv4.gateway }}
+INTERFACE={{ ansible_default_ipv4.interface }}
+DNS={{ansible_facts.dns.nameservers[0]}}
